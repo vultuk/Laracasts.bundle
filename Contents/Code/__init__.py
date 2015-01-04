@@ -1,3 +1,5 @@
+import re
+
 ####################################################################################################
 
 PREFIX = "/video/laracasts"
@@ -49,16 +51,20 @@ def Latest():
 @route(PREFIX + '/series')
 def Series():
     html = getHTMLforPage('series')
-    items = html.xpath("//h3[contains(@class, 'lesson-block-title')]")
+    items = html.xpath("//div[contains(@class, 'lesson-block-inner')]")
 
     oc = ObjectContainer()
 
     for item in items:
-        title = item.xpath("a/@title")[0]
-        url = item.xpath("a/@href")[0]
+        title = item.xpath("h3//a/@title")[0]
+        url = item.xpath("h3//a/@href")[0]
         episode = url.replace("https://laracasts.com/series/", "")
 
-        oc.add(DirectoryObject(key=Callback(Episodes, episode = episode), title=title))
+        seriesImage =  "http:" + re.search(r"url(.[/]+(.[a-zA-Z0-9./-]+))", item.xpath("@style")[0]).group(0).replace('url(', '')
+
+        Log(seriesImage)
+
+        oc.add(DirectoryObject(key=Callback(Episodes, episode = episode), title=title, art=seriesImage))
 
     return oc
 
