@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleIdentifier</key>
+    <string>com.plexapp.plugins.laracasts</string>
+    <key>PlexClientPlatforms</key>
+    <string>*</string>
+    <key>PlexFrameworkVersion</key>
+    <string>2</string>
+    <key>PlexURLServices</key>
+    <dict>
+       <key>LaraCasts</key>
+       <dict>
+          <key>Identifier</key>
+          <string>com.plexapp.plugins.laracasts</string>
+          <key>URLPatterns</key>
+          <array>
+            <string>https://laracasts\.com/lessons/</string>
+            <string>https://laracasts\.com/series/</string>
+            <string>https://laracasts\.com/series/.*/episodes/</string>
+          </array>
+          <key>TestURLs</key>
+          <array>
+             <string>https://laracasts.com/lessons/laravel-5-events</string>
+             <string>https://laracasts.com/series/testing-jargon</string>
+             <string>https://laracasts.com/series/testing-jargon/episodes/8</string>
+          </array>
+       </dict>
+    </dict>
+</dict>
+</plist>

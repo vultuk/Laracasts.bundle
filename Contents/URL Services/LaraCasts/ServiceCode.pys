@@ -1,0 +1,38 @@
+import re
+
+HTTP_HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36'
+}
+
+
+def NormalizeURL(url):
+    return url
+
+def MetadataObjectForURL(url):
+    html = HTML.ElementFromURL(url, cacheTime=0, headers=HTTP_HEADERS)
+
+    title = html.xpath("//h1[contains(@class, 'lesson-title')]/text()")[0]
+    summary = html.xpath("//div[contains(@class, 'lesson-body')]/text()")[0]
+    thumb = "http:" + html.xpath("//video[contains(@id, 'laracasts-video') and @poster]/@poster")[0]
+
+    return VideoClipObject(title=title, summary=summary, thumb=thumb)
+
+
+def MediaObjectsForURL(url):
+    cb = Callback(PlayVideo, url = url)
+    mo = MediaObject(
+        parts = [ PartObject( key = cb ) ],
+        container = Container.MP4,
+        optimized_for_streaming = True
+    )
+
+    return [ mo ]
+
+@indirect
+def PlayVideo(url):
+    html = HTML.ElementFromURL(url, cacheTime=0, headers=HTTP_HEADERS)
+    video = html.xpath("//video[contains(@id, 'laracasts-video') and @poster]")[0]
+
+    hd = "http:" + video.xpath("source[contains(@data-quality, 'hd')]/@src")[0]
+
+    return IndirectResponse(VideoClipObject, key = hd)
