@@ -11,12 +11,18 @@ def NormalizeURL(url):
 def MetadataObjectForURL(url):
     html = HTML.ElementFromURL(url, cacheTime=0, headers=HTTP_HEADERS)
 
-    title = html.xpath("//h1[contains(@class, 'lesson-title')]/text()")[0]
-    summary = html.xpath("//div[contains(@class, 'lesson-body')]/text()")[0]
-    thumb = "http:" + html.xpath("//video[contains(@id, 'laracasts-video') and @poster]/@poster")[0]
+    try:
+        title = html.xpath("//h1[contains(@class, 'lesson-title')]/text()")[0]
+        summary = html.xpath("//div[contains(@class, 'lesson-body')]/text()")[0]
+        thumb = "http:" + html.xpath("//video[contains(@id, 'laracasts-video') and @poster]/@poster")[0].replace("/images/posters/default.png","http://laracasts.s3.amazonaws.com/images/video-thumbnails/laravel-5-from-scratch-tn.jpg")
 
-    return VideoClipObject(title=title, summary=summary, thumb=thumb)
+        return VideoClipObject(title=title, summary=summary, thumb=thumb)
+    except:
+        return ObjectContainer(title1="NOPE!")
 
+
+def subscribe():
+    return None
 
 def MediaObjectsForURL(url):
     cb = Callback(PlayVideo, url = url)
@@ -31,8 +37,12 @@ def MediaObjectsForURL(url):
 @indirect
 def PlayVideo(url):
     html = HTML.ElementFromURL(url, cacheTime=0, headers=HTTP_HEADERS)
-    video = html.xpath("//video[contains(@id, 'laracasts-video') and @poster]")[0]
 
-    hd = "http:" + video.xpath("source[contains(@data-quality, 'hd')]/@src")[0]
+    try:
+        video = html.xpath("//video[contains(@id, 'laracasts-video') and @poster]")[0]
+        sd = "http:" + video.xpath("source[contains(@data-quality, 'hd')]/@src")[0]
+        hd = "http:" + video.xpath("source[contains(@data-quality, 'hd')]/@src")[0]
 
-    return IndirectResponse(VideoClipObject, key = hd)
+        return IndirectResponse(VideoClipObject, key = hd)
+    except:
+        return IndirectResponse(VideoClipObject, key = "http://player.vimeo.com/external/115819100.hd.mp4?s=b3efe8b3ff8ddd88513c833d7cd1d021")

@@ -1,0 +1,23 @@
+[
+    {
+        "id": "username",
+        "type": "text",
+        "label": "Email Address",
+        "default": ""
+    },
+    {
+        "id": "password",
+        "type": "text",
+        "label": "Password",
+        "default": "",
+        "option": "hidden",
+        "secure": "true"
+    },
+    {
+        "id": "quality",
+        "type": "enum",
+        "label": "Video Quality",
+        "values": ["HD", "SD"],
+        "default": "HD"
+    }
+]
